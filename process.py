@@ -6,39 +6,15 @@ import pandas, numpy, textblob, string
 from keras.preprocessing import text, sequence
 from keras import layers, models, optimizers
 import csv
-#data = open('amazon_review_full_csv/train.csv').read()
-#print(data)
 
-labels, texts = [], []
-"""
-for i, line in enumerate(data.split("\n")):
-    #print(i)
-    #print(line)
-    #content = line.replace('"', '')
-    con = line.split(",")
-    print(con)
-    #print(con[2])
-    #edit = " ".join([con[1],con[2]])
-    labels.append(con[0])
-    #edit1 = con[1]
-    #edit2 = con[2]
-    #edit = edit1 + edit2
-    texts.append(con[1])
-    #texts.append(con[2])
-
-
-    #print(texts)
-"""
 
 def prep_data():
     with open('amazon_review_full_csv/train.csv') as csvfile:
         readCSV = csv.reader(csvfile, delimiter=',')
         for row in readCSV:
-            #print(row[2])
             newrow = row[1] + ' ' + row[2]
             labels.append(row[0])
             texts.append(newrow)
-
 
     trainDF = pandas.DataFrame()
     trainDF['text'] = texts
@@ -50,7 +26,6 @@ def prep_data():
     train_y = encoder.fit_transform(train_y)
     valid_y = encoder.fit_transform(valid_y)
     return train_x, valid_x, train_y, valid_y,trainDF
-#print(train_y)
 
 a,b,c,d,e = prep_data()
 
@@ -60,8 +35,8 @@ def countVec():
 
     # transform the training and validation data using count vectorizer object
     xtrain_count =  count_vect.transform(a)
-    print(xtrain_count)
     xvalid_count =  count_vect.transform(b)
+    return xtrain_count, xvalid_count
 
 
 def tf_idf():
@@ -82,6 +57,7 @@ def tf_idf():
     xtrain_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(train_x)
     xvalid_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(valid_x)
 
+    return xtrain_tfidf, xvalid_tfidf, xtrain_tfidf_ngram, xvalid_tfidf_ngram, xtrain_tfidf_ngram_chars, xvalid_tfidf_ngram_chars
 
 def word_emb(df,tx,vx):
     embeddings_index = {}
@@ -143,5 +119,6 @@ def apply_pos(DF):
     DF['adv_count'] = DF['text'].apply(lambda x: check_pos_tag(x, 'adv'))
     DF['pron_count'] = DF['text'].apply(lambda x: check_pos_tag(x, 'pron'))
 
+    return DF
 
 word_emb(e,a,b)
