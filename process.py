@@ -7,7 +7,7 @@ from keras.preprocessing import text, sequence
 from keras import layers, models, optimizers
 import csv
 
-
+texts, labels = [], []
 def prep_data():
     with open('amazon_review_full_csv/train.csv') as csvfile:
         readCSV = csv.reader(csvfile, delimiter=',')
@@ -27,9 +27,9 @@ def prep_data():
     valid_y = encoder.fit_transform(valid_y)
     return train_x, valid_x, train_y, valid_y,trainDF
 
-a,b,c,d,e = prep_data()
+#a,b,c,d,e = prep_data()
 
-def countVec():
+def countVec(a,b,e):
     count_vect = CountVectorizer(analyzer='word', token_pattern=r'\w{1,}')
     count_vect.fit(e)
 
@@ -39,23 +39,23 @@ def countVec():
     return xtrain_count, xvalid_count
 
 
-def tf_idf():
+def tf_idf(a,b,e):
     tfidf_vect = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', max_features=5000)
-    tfidf_vect.fit(trainDF['text'])
-    xtrain_tfidf =  tfidf_vect.transform(train_x)
-    xvalid_tfidf =  tfidf_vect.transform(valid_x)
+    tfidf_vect.fit(e['text'])
+    xtrain_tfidf =  tfidf_vect.transform(a)
+    xvalid_tfidf =  tfidf_vect.transform(b)
 
     # ngram level tf-idf
     tfidf_vect_ngram = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', ngram_range=(2,3), max_features=5000)
-    tfidf_vect_ngram.fit(trainDF['text'])
-    xtrain_tfidf_ngram =  tfidf_vect_ngram.transform(train_x)
-    xvalid_tfidf_ngram =  tfidf_vect_ngram.transform(valid_x)
+    tfidf_vect_ngram.fit(e['text'])
+    xtrain_tfidf_ngram =  tfidf_vect_ngram.transform(a)
+    xvalid_tfidf_ngram =  tfidf_vect_ngram.transform(b)
 
     # characters level tf-idf
     tfidf_vect_ngram_chars = TfidfVectorizer(analyzer='char', token_pattern=r'\w{1,}', ngram_range=(2,3), max_features=5000)
-    tfidf_vect_ngram_chars.fit(trainDF['text'])
-    xtrain_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(train_x)
-    xvalid_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(valid_x)
+    tfidf_vect_ngram_chars.fit(e['text'])
+    xtrain_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(a)
+    xvalid_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(b)
 
     return xtrain_tfidf, xvalid_tfidf, xtrain_tfidf_ngram, xvalid_tfidf_ngram, xtrain_tfidf_ngram_chars, xvalid_tfidf_ngram_chars
 
@@ -121,4 +121,4 @@ def apply_pos(DF):
 
     return DF
 
-word_emb(e,a,b)
+#word_emb(e,a,b)
