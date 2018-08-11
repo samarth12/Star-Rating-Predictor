@@ -23,7 +23,7 @@ DF = process.apply_pos(trainDF)
 
 
 def getChoice():
-    print("\nMenu\n(1)Naive Bayes Classifier\n(2)Linear Classifier\n(3)SVM\n(Q)uit")
+    print("\nMenu\n(1)Naive Bayes Classifier\n(2)Linear Classifier\n(3)SVM\n(4)Random Forrest\n(Q)uit")
     choose=raw_input(">>> ")
     choice=choose.lower()
 
@@ -70,6 +70,15 @@ def svm():
     accuracy = train_model(svm.SVC(), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram)
     print "SVM, N-Gram Vectors: ", accuracy
 
+def random_forrest():
+    #RF on Count Vectors
+    accuracy = train_model(ensemble.RandomForestClassifier(), xtrain_count, train_y, xvalid_count)
+    print "RF, Count Vectors: ", accuracy
+
+    # RF on Word Level TF IDF Vectors
+    accuracy = train_model(ensemble.RandomForestClassifier(), xtrain_tfidf, train_y, xvalid_tfidf)
+    print "RF, WordLevel TF-IDF: ", accuracy
+
 
 
 while choice!="q":
@@ -79,6 +88,8 @@ while choice!="q":
         linear_classifier()
     elif choice=="3":
         svm()
+    elif choice=="4":
+        random_forrest()
 
     else:
         print("Invalid choice, please choose again")
